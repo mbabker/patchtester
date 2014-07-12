@@ -86,6 +86,12 @@ class PatchtesterViewPulls extends JViewLegacy
 				return false;
 			}
 		}
+		else
+		{
+			JError::raiseError(500, implode("\n", $this->envErrors));
+
+			return false;
+		}
 
 		$this->addToolbar();
 
