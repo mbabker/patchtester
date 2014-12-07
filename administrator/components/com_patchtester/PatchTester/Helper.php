@@ -20,11 +20,13 @@ abstract class Helper
 	/**
 	 * Initializes the JGithub object
 	 *
+	 * @param  bool  Use the User enterd PW yes or no
+	 *
 	 * @return  \JGithub
 	 *
 	 * @since   2.0
 	 */
-	public static function initializeGithub()
+	public static function initializeGithub($use_user_pw)
 	{
 		$params = \JComponentHelper::getParams('com_patchtester');
 
@@ -35,8 +37,8 @@ abstract class Helper
 		{
 			$options->set('gh.token', $params->get('gh_token', ''));
 		}
-		// Set the username and password if set in the params
-		elseif ($params->get('gh_user', '') && $params->get('gh_password'))
+		// Set the username and password if set in the params and not disabled by the code
+		elseif ($params->get('gh_user', '') && $params->get('gh_password') && $use_user_pw == true)
 		{
 			$options->set('api.username', $params->get('gh_user', ''));
 			$options->set('api.password', $params->get('gh_password', ''));
