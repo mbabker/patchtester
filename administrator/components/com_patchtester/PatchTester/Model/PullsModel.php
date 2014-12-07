@@ -289,7 +289,7 @@ class PullsModel extends \JModelDatabase
 	public function requestFromGithub()
 	{
 		// Get the Github object
-		$github = Helper::initializeGithub();
+		$github = Helper::initializeGithub(true);
 
 		// If over the API limit, we can't build this list
 		if ($github->authorization->getRateLimit()->rate->remaining > 0)
