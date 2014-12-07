@@ -315,7 +315,7 @@ class PullsModel extends \JModelDatabase
 				{
 					$github = Helper::initializeGithub(false);
 					
-					\JFactory::getApplication()->enqueueMessage(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()), 'notice');
+					\JFactory::getApplication()->enqueueMessage(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()), 'error');
 					
 					try
 					{
