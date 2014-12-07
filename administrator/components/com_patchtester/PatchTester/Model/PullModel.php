@@ -125,7 +125,7 @@ class PullModel extends \JModelBase
 	public function apply($id)
 	{
 		// Get the Github object
-		$github = Helper::initializeGithub();
+		$github = Helper::initializeGithub(true);
 
 		// Only act if there are API hits remaining
 		if ($github->authorization->getRateLimit()->rate->remaining > 0)
