@@ -313,7 +313,19 @@ class PullsModel extends \JModelDatabase
 				}
 				catch (\DomainException $e)
 				{
-					throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
+					$github = Helper::initializeGithub(false);
+					
+					\JFactory::getApplication()->enqueueMessage(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()), 'notice');
+					
+					try
+					{
+						$items  = $github->pulls->getList($this->getState()->get('github_user'), $this->getState()->get('github_repo'), 'open', $page, 100);
+					
+					}
+					catch (\DomainException $e)
+					{
+						throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
+					}
 				}
 
 				$count = is_array($items) ? count($items) : 0;
