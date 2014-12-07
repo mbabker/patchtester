@@ -26,7 +26,7 @@ abstract class Helper
 	 *
 	 * @since   2.0
 	 */
-	public static function initializeGithub($use_user_pw)
+	public static function initializeGithub($use_user_pw = true)
 	{
 		$params = \JComponentHelper::getParams('com_patchtester');
 
