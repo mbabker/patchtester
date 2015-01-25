@@ -33,7 +33,7 @@ abstract class Helper
 		$options = new Registry;
 
 		// If an API token is set in the params, use it for authentication
-		if ($params->get('gh_token', ''))
+		if ($params->get('gh_token', '') && $use_user_pw == true)
 		{
 			$options->set('gh.token', $params->get('gh_token', ''));
 		}
