@@ -292,64 +292,62 @@ class PullsModel extends \JModelDatabase
 		$github = Helper::initializeGithub();
 
 		// If over the API limit, we can't build this list
-		if ($github->authorization->getRateLimit()->rate->remaining > 0)
-		{
-			// Sanity check, ensure there aren't any applied patches
-			if (count($this->getAppliedPatches()) >= 1)
-			{
-				throw new \RuntimeException(\JText::_('COM_PATCHTESTER_ERROR_APPLIED_PATCHES'));
-			}
-
-			$pulls = array();
-			$page  = 0;
-
-			do
-			{
-				$page++;
-
-				try
-				{
-					$items = $github->pulls->getList($this->getState()->get('github_user'), $this->getState()->get('github_repo'), 'open', $page, 100);
-				}
-				catch (\DomainException $e)
-				{
-					throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
-				}
-
-				$count = is_array($items) ? count($items) : 0;
-
-				if ($count)
-				{
-					$pulls = array_merge($pulls, $items);
-				}
-			}
-			while ($count);
-
-			// Dump the old data now
-			$this->getDb()->truncateTable('#__patchtester_pulls');
-
-			foreach ($pulls as &$pull)
-			{
-				// Build the data object to store in the database
-				$data              = new \stdClass;
-				$data->pull_id     = $pull->number;
-				$data->title       = $pull->title;
-				$data->description = $pull->body;
-				$data->pull_url    = $pull->html_url;
-
-				try
-				{
-					$this->getDb()->insertObject('#__patchtester_pulls', $data, 'id');
-				}
-				catch (\RuntimeException $e)
-				{
-					throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_INSERT_DATABASE', $e->getMessage()));
-				}
-			}
-		}
-		else
+		if ($github->authorization->getRateLimit()->resources->core->remaining == 0)
 		{
 			throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_API_LIMIT_LIST', \JFactory::getDate($this->rate->reset)));
+		}
+
+		// Sanity check, ensure there aren't any applied patches
+		if (count($this->getAppliedPatches()) >= 1)
+		{
+			throw new \RuntimeException(\JText::_('COM_PATCHTESTER_ERROR_APPLIED_PATCHES'));
+		}
+
+		$pulls = array();
+		$page  = 0;
+
+		do
+		{
+			$page++;
+
+			try
+			{
+				$items = $github->pulls->getList($this->getState()->get('github_user'), $this->getState()->get('github_repo'), 'open', $page, 100);
+			}
+			catch (\DomainException $e)
+			{
+				throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
+			}
+
+			$count = is_array($items) ? count($items) : 0;
+
+			if ($count)
+			{
+				$pulls = array_merge($pulls, $items);
+			}
+		}
+		while ($count);
+
+		// Dump the old data now
+		$this->getDb()->truncateTable('#__patchtester_pulls');
+
+		foreach ($pulls as &$pull)
+		{
+			// Build the data object to store in the database
+			$data              = new \stdClass;
+			$data->pull_id     = $pull->number;
+			$data->title       = $pull->title;
+			$data->description = $pull->body;
+			$data->pull_url    = $pull->html_url;
+
+			try
+			{
+				$this->getDb()->insertObject('#__patchtester_pulls', $data, 'id');
+			}
+			catch (\RuntimeException $e)
+			{
+				throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_INSERT_DATABASE', $e->getMessage()));
+			}
 		}
 	}
 
