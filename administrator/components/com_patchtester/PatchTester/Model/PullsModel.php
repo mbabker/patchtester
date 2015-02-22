@@ -289,7 +289,7 @@ class PullsModel extends \JModelDatabase
 	public function requestFromGithub()
 	{
 		// Get the Github object
-		$github = Helper::initializeGithub();
+		$github = Helper::initializeGithub(true);
 
 		// If over the API limit, we can't build this list
 		if ($github->authorization->getRateLimit()->resources->core->remaining > 0)
@@ -313,7 +313,19 @@ class PullsModel extends \JModelDatabase
 				}
 				catch (\DomainException $e)
 				{
-					throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
+					$github = Helper::initializeGithub(false);
+					
+					\JFactory::getApplication()->enqueueMessage(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()), 'error');
+					
+					try
+					{
+						$items  = $github->pulls->getList($this->getState()->get('github_user'), $this->getState()->get('github_repo'), 'open', $page, 100);
+					
+					}
+					catch (\DomainException $e)
+					{
+						throw new \RuntimeException(\JText::sprintf('COM_PATCHTESTER_ERROR_GITHUB_FETCH', $e->getMessage()));
+					}
 				}
 
 				$count = is_array($items) ? count($items) : 0;
