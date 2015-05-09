@@ -31,6 +31,9 @@ if ($task === '')
 
 $class = '\\PatchTester\\Controller\\' . ucfirst(strtolower($task)) . 'Controller';
 
+// Increase PHP max execution time to 5 minute
+ini_set('max_execution_time', 300);
+
 // Instantiate and execute the controller
 $controller = new $class($app->input, $app);
 $controller->execute();
