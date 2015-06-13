@@ -345,8 +345,8 @@ class PullsModel extends \JModelDatabase
 			// Build the data object to store in the database
 			$pullData = array(
 				$pull->number,
-				$this->getDb()->quote($pull->title),
-				$this->getDb()->quote(\JHtml::_('string.truncate', $pull->body, 100)),
+				$this->getDb()->quote(\JHtml::_('string.truncate', $pull->title, 200)),
+				$this->getDb()->quote(\JHtml::_('string.truncate', $pull->body, 150)),
 				$this->getDb()->quote($pull->html_url)
 			);
 
