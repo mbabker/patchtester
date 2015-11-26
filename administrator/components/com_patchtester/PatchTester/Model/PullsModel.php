@@ -128,7 +128,7 @@ class PullsModel extends \JModelDatabase
 
 		if (!empty($search))
 		{
-			$searchid = preg_replace('![^0-9]!', '', $search); 
+			$searchid = preg_replace('![^0-9]!', '', $search);
 			$searchid = $db->quote($db->escape($searchid, true));
 			$search   = $db->quote('%' . $db->escape($search, true) . '%');
 
