@@ -9,7 +9,6 @@
 namespace PatchTester\Model;
 
 use Joomla\CMS\Pagination\Pagination;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Registry\Registry;
 use PatchTester\GitHub\Exception\UnexpectedResponse;
 use PatchTester\Helper;
@@ -372,8 +371,7 @@ class PullsModel extends \JModelDatabase
 		}
 
 		$data     = array();
-		$params   = ComponentHelper::getParams('com_patchtester');
-		$mybranch = $params->get('branch','');
+		$mybranch = $this->getState()->get('mybranch');
 
 		foreach ($pulls as $pull)
 		{
@@ -395,7 +393,7 @@ class PullsModel extends \JModelDatabase
 					}
 				}
 
-				// Load only pr's from branch like in the options
+				// Load only pr's from branch if setted in the options
 				if (($mybranch !== '') && ($mybranch !== $branch))
 				{
 					continue;
