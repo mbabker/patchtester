@@ -72,6 +72,7 @@ abstract class AbstractController extends \JControllerBase
 
 		$state->set('github_user', $params->get('org', 'joomla'));
 		$state->set('github_repo', $params->get('repo', 'joomla-cms'));
+		$state->set('mybranch', $params->get('branch', ''));
 
 		return $state;
 	}
