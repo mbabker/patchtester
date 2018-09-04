@@ -42,6 +42,15 @@
 			showon="repository:custom"
 		/>
 
+		<field
+			name="branch"
+			type="text"
+			label="COM_PATCHTESTER_FIELD_BRANCH_LABEL"
+			description="COM_PATCHTESTER_FIELD_BRANCH_DESC"
+			default=""
+			id="branch"
+		/>
+
 	</fieldset>
 
 	<fieldset

@@ -370,7 +370,8 @@ class PullsModel extends \JModelDatabase
 			return array('complete' => true);
 		}
 
-		$data = array();
+		$data     = array();
+		$mybranch = $this->getState()->get('mybranch');
 
 		foreach ($pulls as $pull)
 		{
@@ -390,6 +391,12 @@ class PullsModel extends \JModelDatabase
 					{
 						$branch = substr($label->name, 3);
 					}
+				}
+
+				// Load only pr's from branch if setted in the options
+				if (($mybranch !== '') && ($mybranch !== $branch))
+				{
+					continue;
 				}
 
 				// Build the data object to store in the database
