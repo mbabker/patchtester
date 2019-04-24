@@ -9,6 +9,8 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\InstallerScript;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 
 /**
  * Installation class to perform additional changes during install/uninstall/update
@@ -43,6 +45,34 @@ class Com_PatchtesterInstallerScript extends InstallerScript
 			'/administrator/components/com_patchtester/PatchTester/Table',
 			'/components/com_patchtester',
 		);
+	}
+
+	/**
+	 * Function called before extension installation/update/removal procedure commences
+	 *
+	 * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+	 * @param   ComponentAdapter  $parent  The class calling this method
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function preflight($type, $parent)
+	{
+		$return = parent::preflight($type, $parent);
+
+		if ($return)
+		{
+			// Block installation on 4.0 due to the MVC code this component relies on being removed
+			if (version_compare(JVERSION, '4.0', '>='))
+			{
+				Log::add(Text::_('COM_PATCHTESTER_CANNOT_INSTALL_ON_JOOMLA_4'), Log::WARNING, 'jerror');
+
+				return false;
+			}
+		}
+
+		return $return;
 	}
 
 	/**
