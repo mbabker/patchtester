@@ -38,29 +38,30 @@ $filterBranch  = $this->escape($this->state->get('filter.branch'));
 $filterRtc     = $this->escape($this->state->get('filter.rtc'));
 ?>
 <form action="<?php echo Route::_('index.php?option=com_patchtester&view=pulls'); ?>" method="post" name="adminForm" id="adminForm">
-	<div class="row">
+	<div class="row" style="margin-left: 0">
 		<div class="col-md-12">
 			<div id="j-main-container" class="j-main-container">
 				<div class="js-stools" role="search">
 					<div class="js-stools-container-bar">
 						<div class="btn-toolbar">
+                            <div style="position: relative; margin-bottom: 15px">
 							<div class="btn-group mr-2">
 								<div class="input-group">
 									<label for="filter_search" class="sr-only">
 										<?php echo Text::_('COM_PATCHTESTER_FILTER_SEARCH_DESCRIPTION'); ?>
 									</label>
-									<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="form-control" placeholder="<?php echo Text::_('JSEARCH_FILTER'); ?>">
+									<input style="margin-bottom: 0" type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" class="form-control" placeholder="<?php echo Text::_('JSEARCH_FILTER'); ?>">
 									<div role="tooltip" id="filter_search-desc">
 										<?php echo $this->escape(Text::_('COM_PATCHTESTER_FILTER_SEARCH_DESCRIPTION')); ?>
 									</div>
 									<span class="input-group-append">
 										<button type="submit" class="btn btn-primary" aria-label="<?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>">
-											<span class="fa fa-search" aria-hidden="true"></span>
+											<span class="fa fa-search" aria-hidden="true"><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?></span>
 										</button>
 									</span>
 								</div>
 							</div>
-							<div class="btn-group">
+							<div style="bottom: 0; position: absolute" class="btn-group">
 								<button type="button" class="btn btn-primary hasTooltip js-stools-btn-filter">
 									<?php echo Text::_('JFILTER_OPTIONS'); ?>
 									<span class="fa fa-angle-down" aria-hidden="true"></span>
@@ -69,6 +70,7 @@ $filterRtc     = $this->escape($this->state->get('filter.rtc'));
 									<?php echo Text::_('JSEARCH_FILTER_CLEAR'); ?>
 								</button>
 							</div>
+                            </div>
 							<div class="ordering-select">
 								<div class="js-stools-field-list">
 									<select name="list_fullordering" id="list_fullordering" class="custom-select" onchange="this.form.submit()">
