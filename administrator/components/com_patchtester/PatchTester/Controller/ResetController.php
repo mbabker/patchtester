@@ -35,7 +35,7 @@ class ResetController extends AbstractController
 	{
 		try
 		{
-			$hasErrors = false;
+			$hasErrors     = false;
 			$revertErrored = false;
 
 			$pullModel  = new PullModel(null, Factory::getDbo());
