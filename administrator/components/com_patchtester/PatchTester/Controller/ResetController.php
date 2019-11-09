@@ -47,7 +47,6 @@ class ResetController extends AbstractController
 
 			if (count($appliedPatches['git']))
 			{
-
 				// Let's try to cleanly revert all applied patches
 				foreach ($appliedPatches['git'] as $patch)
 				{
