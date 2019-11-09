@@ -596,7 +596,7 @@ class PullModel extends AbstractModel
 		$params = ComponentHelper::getParams('com_patchtester');
 
 		// Decide based on repository settings whether patch will be applied through Github or CIServer
-		if (version_compare(JVERSION, "4", "ge") && ((bool) $params->get('ci_switch', 1) || $id === $this->getPatchChain($id)->insert_id))
+		if (version_compare(JVERSION, "4", "ge") && ((bool) $params->get('ci_switch', 1) || $id === $this->getPatchChain($id))->insert_id)
 		{
 			return $this->revertWithCIServer($id);
 		}
