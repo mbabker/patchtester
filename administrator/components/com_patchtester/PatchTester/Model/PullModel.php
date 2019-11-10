@@ -220,13 +220,13 @@ class PullModel extends AbstractModel
 			return false;
 		}
 
+		$version    = new Version;
+		$httpOption = new Registry;
+		$httpOption->set('userAgent', $version->getUserAgent('Joomla', true, false));
+
 		// Try to download the zip file
 		try
 		{
-			$version    = new Version;
-			$httpOption = new Registry;
-			$httpOption->set('userAgent', $version->getUserAgent('Joomla', true, false));
-
 			$http = HttpFactory::getHttp($httpOption);
 			$result = $http->get($serverZipPath);
 		}
