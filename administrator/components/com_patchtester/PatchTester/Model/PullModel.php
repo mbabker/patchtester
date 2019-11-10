@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\Registry\Registry;
 use PatchTester\GitHub\Exception\UnexpectedResponse;
 use PatchTester\GitHub\GitHub;
 use PatchTester\Helper;
@@ -222,20 +223,28 @@ class PullModel extends AbstractModel
 		// Try to download the zip file
 		try
 		{
-			$result = HttpFactory::getHttp([], ['curl', 'stream'])->get($serverZipPath);
+			$version    = new Version;
+			$httpOption = new Registry;
+			$httpOption->set('userAgent', $version->getUserAgent('Joomla', true, false));
+
+			$http = HttpFactory::getHttp($httpOption);
+			$result = $http->get($serverZipPath);
 		}
 		catch (\RuntimeException $e)
 		{
-			$result = false;
+			$result = null;
 		}
 
-		if (!$result || ($result->code != 200 && $result->code != 310))
+		if ($result === null || ($result->code != 200 && $result->code != 310))
 		{
 			throw new \RuntimeException(Text::_('COM_PATCHTESTER_SERVER_RESPONDED_NOT_200'));
 		}
 
+		// Assign to variable to avlod PHP notice "Indirect modification of overloaded property"
+		$content = $result->body;
+
 		// Write the file to disk
-		File::write($zipPath, $result->body);
+		File::write($zipPath, $content);
 
 		// Check if zip folder could have been downloaded
 		if (!file_exists($zipPath))
