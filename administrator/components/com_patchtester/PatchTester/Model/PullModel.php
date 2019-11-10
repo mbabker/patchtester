@@ -12,6 +12,7 @@ use Joomla\Archive\Zip;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Http\Response;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
@@ -218,23 +219,31 @@ class PullModel extends AbstractModel
 			return false;
 		}
 
-		// Check if zip folder exists on server
-		$serverHeaders = @get_headers($serverZipPath);
+		// Try to download the zip file
+		try
+		{
+			$result = HttpFactory::getHttp([], ['curl', 'stream'])->get($serverZipPath);
+		}
+		catch (\RuntimeException $e)
+		{
+			$result = false;
+		}
 
-		if (!$serverHeaders || $serverHeaders[0] != 'HTTP/1.1 200 OK')
+		if (!$result || ($result->code != 200 && $result->code != 310))
 		{
 			throw new \RuntimeException(Text::_('COM_PATCHTESTER_SERVER_RESPONDED_NOT_200'));
 		}
 
-		Folder::create($tempPath);
-		file_put_contents($zipPath, fopen($serverZipPath, "r"));
+		// Write the file to disk
+		File::write($zipPath, $result->body);
 
 		// Check if zip folder could have been downloaded
 		if (!file_exists($zipPath))
 		{
-			Folder::delete($tempPath);
 			throw new \RuntimeException(Text::_('COM_PATCHTESTER_ZIP_DOES_NOT_EXIST'));
 		}
+
+		Folder::create($tempPath);
 
 		$zip = new Zip;
 
