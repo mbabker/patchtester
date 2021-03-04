@@ -321,7 +321,7 @@ class PullsModel extends AbstractModel
 			// TODO - Option to configure the batch size
 			$batchSize = 100;
 
-			$pullsResponse = Helper::initializeGithub()->getOpenIssues(
+			$pullsResponse = Helper::initializeGithub()->getOpenPulls(
 				$this->getState()->get('github_user'), $this->getState()->get('github_repo'), $page, $batchSize
 			);
 
@@ -370,36 +370,33 @@ class PullsModel extends AbstractModel
 
 		foreach ($pulls as $pull)
 		{
-			if (isset($pull->pull_request))
+			// Check if this PR is RTC and has a `PR-` branch label
+			$isRTC  = false;
+			$branch = '';
+
+			foreach ($pull->labels as $label)
 			{
-				// Check if this PR is RTC and has a `PR-` branch label
-				$isRTC  = false;
-				$branch = '';
-
-				foreach ($pull->labels as $label)
+				if ($label->name === 'RTC')
 				{
-					if ($label->name === 'RTC')
-					{
-						$isRTC = true;
-					}
-					elseif (substr($label->name, 0, 3) === 'PR-')
-					{
-						$branch = substr($label->name, 3);
-					}
+					$isRTC = true;
 				}
-
-				// Build the data object to store in the database
-				$pullData = array(
-					(int) $pull->number,
-					$this->getDb()->quote(HTMLHelper::_('string.truncate', $pull->title, 150)),
-					$this->getDb()->quote(HTMLHelper::_('string.truncate', $pull->body, 100)),
-					$this->getDb()->quote($pull->pull_request->html_url),
-					(int) $isRTC,
-					$this->getDb()->quote($branch),
-				);
-
-				$data[] = implode(',', $pullData);
+				elseif (substr($label->name, 0, 3) === 'PR-')
+				{
+					$branch = substr($label->name, 3);
+				}
 			}
+
+			// Build the data object to store in the database
+			$pullData = array(
+				(int) $pull->number,
+				$this->getDb()->quote(HTMLHelper::_('string.truncate', $pull->title, 150)),
+				$this->getDb()->quote(HTMLHelper::_('string.truncate', $pull->body, 100)),
+				$this->getDb()->quote($pull->html_url),
+				(int) $isRTC,
+				$this->getDb()->quote($branch),
+			);
+
+			$data[] = implode(',', $pullData);
 		}
 
 		// If there are no pulls to insert then bail, assume we're finished
