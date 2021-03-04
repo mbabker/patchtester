@@ -210,7 +210,7 @@ class GitHub
 
 		return $this->processResponse($this->client->get($prepared['url'], $prepared['headers']));
 	}
-	
+
 	/**
 	 * Get a list of the open pull requests for a repository.
 	 *
