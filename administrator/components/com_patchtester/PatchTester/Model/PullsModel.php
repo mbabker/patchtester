@@ -535,9 +535,9 @@ class PullsModel extends AbstractModel
 			// Default this to being a single page of results
 			$lastPage = 1;
 
-			if (isset($pullsResponse->headers['Link']))
+			if (isset($pullsResponse->headers['link']))
 			{
-				$linkHeader = $pullsResponse->headers['Link'];
+				$linkHeader = $pullsResponse->headers['link'];
 
 				// The `joomla/http` 2.0 package uses PSR-7 Responses which has a different format for headers, check for this
 				if (is_array($linkHeader))
