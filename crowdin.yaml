@@ -7,7 +7,7 @@ base_url: "https://joomla.crowdin.com"
 preserve_hierarchy: true
 
 files:
-  - ssource: /en-GB/com_patchtester.ini
+  - source: /en-GB/com_patchtester.ini
     dest: 'PatchTester/com_patchtester.ini'
     translation: /%locale%/com_patchtester.ini
     update_option: update_as_unapproved
