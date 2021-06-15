@@ -8,12 +8,12 @@ preserve_hierarchy: true
 
 files:
   - source: /administrator/components/com_patchtester/language/en-GB/com_patchtester.ini
-    dest: 'PatchTester/com_patchtester.ini'
+    dest: 'PatchTester/administrator/com_patchtester.ini'
     translation: /administrator/components/com_patchtester/language/%locale%/com_patchtester.ini
     type: joomla
     update_option: update_as_unapproved
   - source: /administrator/components/com_patchtester/language/en-GB/com_patchtester.sys.ini
-    dest: 'PatchTester/com_patchtester.sys.ini'
+    dest: 'PatchTester/administrator/com_patchtester.sys.ini'
     translation: /administrator/components/com_patchtester/language/%locale%/com_patchtester.sys.ini
     type: joomla
     update_option: update_as_unapproved
